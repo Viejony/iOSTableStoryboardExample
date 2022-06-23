@@ -9,15 +9,24 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    let colorsArray: [ColorModel] = [
+        ColorModel(colorName: "Red", red: 255, green: 0, blue: 0),
+        ColorModel(colorName: "Green", red: 0, green: 255, blue: 0),
+        ColorModel(colorName: "Blue", red: 0, green: 0, blue: 255)
+    ]
+    
     @IBOutlet weak var tableView: UITableView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.dataSource = self
+        
         tableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: "myCell")
+            UINib(
+                nibName: "ColorTableViewCell",
+                bundle: nil),
+            forCellReuseIdentifier: "ColorTableViewCell")
         
         tableView.delegate = self
     }
@@ -33,14 +42,15 @@ extension ViewController: UITableViewDelegate {
 extension ViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return colorsArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)
-        
-        cell.textLabel?.text = "This is the #\(indexPath.row) cell"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ColorTableViewCell", for: indexPath)
+        if let colorCell = cell as? ColorTableViewCell{
+            colorCell.setupCell(color: colorsArray[indexPath.row])
+        }
         
         return cell
     }
